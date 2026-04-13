@@ -1,0 +1,57 @@
+---
+title: "Baseball Title Here"
+author: "Faith Rhinehart"
+format: 
+  html:
+    embed-resources: true
+---
+
+```{r}
+library(readr)
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+mlb_teams <- read_csv("data-finalProject/mlb_teams.csv")
+View(mlb_teams)
+
+Baseball <- mlb_teams |> select(1:2, 4, 6:8, 12:20, 21, 26, 32:39) |> slice(293:2784)
+View(Baseball)
+```
+
+looking at only 1905-2020 because 1905 was when the first world series was
+
+one story: a couple of rule changes that influenced the variables in the data set directly from 1905 - 2020 
+
+- Abolition of spitball (1920)
+  - ended the deadball era of low scoring, strategy driven game, and emphasis on stolen bases. 
+  - After rule change led to increase in scoring, less favorable for batters, 
+ *Graphs:
+   - of number of stolen bases before 1920 and after
+   - of number of runs before and after
+
+- Designated hitter introduced (1973)
+  - Increases run production and home runs
+  - Created a huge difference between the AL and NL(adopted the rule in 2022)
+ *Graphs:
+  - Differences in run production, home runs between the Leagues
+  
+- Big strikeout change-remained consistent from here (1969 the biggest change)
+  - Strike zone was adjusted to batter's armpits to top of knees to give a batter a chance to hit the ball with pitchers still able to be effective
+  - Future direction note in 2026 ABS introduced that will affect the number of strikeouts, walks, and stats overall
+ *Graphs:
+  - Strikeouts of batters, strikeouts by pitchers before and after
+   
+  
+
+Overall story: more games played influences the stats
+- 1961 and 1962 NL and AL expanded to 162 games per season -> remained that way since
+- can look at 1905-1960 and 1961-2020
+
+
+logistic regression model to predict world series winner:
+
+
+Connect the two stories and the logistic regression model somehow
+
+
+Interactive graph or shiny app for more exploration?
