@@ -1,0 +1,131 @@
+---
+title: "334 Final Project"
+format: revealjs
+editor: visual
+---
+
+```{r}
+library(readr)
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+mlb_teams <- read_csv("data-finalProject/mlb_teams.csv")
+Baseball <- mlb_teams |> select(1:2, 13, 18, 20, 21, 35) |> slice(261:2784)
+
+stolen_bases <- Baseball |> filter(year <= "1940") |>
+mutate(period = if_else(year < 1920, "pre-1920", "post-1920"))
+
+designated_hitter <- Baseball |> filter(year >= "1961") |>
+  mutate(period = if_else(year < 1973, "pre-1973", "post-1973"))
+
+strikezone <- Baseball |> select(1,5) 
+batterstrikeouts <- strikezone |> drop_na() |> group_by(year) |> summarise(Total = sum(strikeouts_by_batters)) 
+```
+
+## Data Introduction
+
+ - Baseball has been a professional sport in America for 150 years and has experienced MANY rule changes either to improve the game or define the game more, these rules changes made a lasting impact on how players played baseball
+
+## Data Set
+ - The mlb_teams dataset used it from openintro linked here: https://www.openintro.org/data/index.php?data=mlb_teams)  - looks at every professional team that exists or has existed from 1876 to 2020 with various numerical and categorical variables on each team's performance. 
+
+ - I sliced the dataset to only include world series years (1903-2020) and selected variables of interest: year, league_id, runs_scored, homeruns, strikeouts_by_batters, stolen_bases and strikeouts_by_pitchers. 
+
+## Question of Interest
+ - How did some of the biggest rule changes in the history of baseball affect the game:
+ 
+    1) Abolition of Spitball (1920)
+    2) Introduction of a Designated Hitter (1973)
+    3) Strike zone shifts & mound reduction (1963 and 1969)
+
+## Rule Change #1
+
+Abolition of spitball led to a decrease in stolen bases and a increases in runs scored per year
+```{r}
+
+ggplot(data = stolen_bases, aes(x = year, y = stolen_bases, colour = period)) +
+  geom_point() +
+  geom_smooth(color = "black") +
+  labs(title = "Stolen Bases Through The Years 1903 - 1940",
+       x = "Year",
+       y = "Number of Stolen Bases",
+       colour = "Time Period") +
+  scale_color_brewer(palette = "Set2") +
+  theme_minimal(base_size = 24)
+```
+
+## Rule Change #1b
+
+```{r}
+runs_scored <- Baseball |> filter(year <= "1940") |>
+  mutate(period = if_else(year < 1920, "pre-1920", "post-1920"))
+
+ggplot(data = runs_scored, aes(x = year, y = runs_scored, colour = period)) +
+  geom_point() +
+  geom_smooth(color = "black") +
+  labs(title = "Runs Scored Through The Years 1903 - 1940",
+       x = "Year",
+       y = "Number of Runs Scored",
+       colour = "Time Period") +
+  scale_color_brewer(palette = "Set1") +
+  theme_minimal(base_size = 24)
+```
+
+## Rule Change #2
+
+Introduction of a Designated Hitter led to the AL league to have more runs scored and home runs than the NL
+```{r}
+ggplot(data = designated_hitter, aes(x = league_id, y = runs_scored, fill = period)) +
+  geom_boxplot() +
+  facet_wrap(~period) +
+  labs(title = "Number of Runs Scored Between Each League",
+       x = "League",
+       y = "Number of Runs",
+       fill = "Time Period") +
+  theme_minimal(base_size = 24)
+```
+
+## Rule Change #2b
+
+```{r}
+ggplot(data = designated_hitter, aes(x = league_id, y = homeruns, fill = period)) +
+  geom_boxplot() +
+  facet_wrap(~period) +
+  labs(title = "Number of Homeruns Scored Between Each League",
+       x = "League",
+       y = "Number of Homeruns",
+       fill = "Time Period") +
+  theme_minimal(base_size = 24)
+```
+
+## Rule Change #3 
+
+Strike zone change in 1963 to favor pitchers by that led to "Year of the Pitcher" 1968-1969 so it change again in 1969 with the mound reducing form 15 inches to 10 inches to help batters more
+
+```{r}
+library(plotly)
+
+baseballplot <- ggplot(data = batterstrikeouts, aes(x = year, y = Total, text = paste("Season:", year,
+                                        "Strikeouts:", Total))) +
+  geom_point() +
+  theme_minimal() +
+  geom_vline(xintercept = 1963) +
+  geom_vline(xintercept = 1969) +
+  labs(title = "Strikeouts by Batters per Year",
+       x = "Year",
+       y = "Number of Strikeouts") +
+  lims(y = c(0, NA)) +
+  theme_minimal(base_size = 24)
+baseballplot
+
+ggplotly(baseballplot, tooltip = "text")
+```
+
+## More Applications on Final Project
+
+ - Created a shiny app that allows user to select any team and a variable of interest (numerical only) to see trend throughout that team's existence. (This shiny app uses the whole dataset)
+ 
+## Future Directions
+
+ - It would be interesting to see how ABS (2026) affects the game like number of walks and strikes
+ - Go Yankees!

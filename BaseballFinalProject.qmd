@@ -12,46 +12,215 @@ library(ggplot2)
 library(tidyverse)
 library(dplyr)
 mlb_teams <- read_csv("data-finalProject/mlb_teams.csv")
-View(mlb_teams)
-
-Baseball <- mlb_teams |> select(1:2, 4, 6:8, 12:20, 21, 26, 32:39) |> slice(293:2784)
-View(Baseball)
+Baseball <- mlb_teams |> select(1:2, 13, 18, 21, 35) |> slice(261:2784)
 ```
 
-looking at only 1905-2020 because 1905 was when the first world series was
+**Introduction**
 
-one story: a couple of rule changes that influenced the variables in the data set directly from 1905 - 2020 
+*Created in 1840s New York, modern Baseball took on the first set of formal rules that began to shape and define the sport. These rules included the diamond shaped in-field, 3 outs per innings, and the foul lines. By 1876, baseball grew in popularity and professional teams were introduced, eventually leading to the creation of the National League in 1876 and the American League in 1901 establishing the game as the oldest professional sport in the United States.*
 
-- Abolition of spitball (1920)
-  - ended the deadball era of low scoring, strategy driven game, and emphasis on stolen bases. 
-  - After rule change led to increase in scoring, less favorable for batters, 
- *Graphs:
-   - of number of stolen bases before 1920 and after
-   - of number of runs before and after
+*Since the sport has been played now for 150 years you can imagine there has been a lot of rule changes. Whether it was to improve the game or define the game more, these rules changes made a lasting impact on how players played baseball. The goal of this project is to examine how some of the biggest rule changes that occurred in the history impacted the overall statistics.*
 
-- Designated hitter introduced (1973)
+*The mlb_teams dataset from openintro linked here: https://www.openintro.org/data/index.php?data=mlb_teams looks at every professional team that exists or has existed from 1876 to 2020. The 41 variables-with 2784 observations-include year: Year of play, league_id: League the team plays in with levels AL (American League) and NL (National League), division_id: Division the team plays in with levels W (west), E (east) and C (central), rank: Team's rank in their division at the end of the regular season, games_played: Games played, home_games: Games played at home, wins: Number of games won, losses: Number of games lost, division_winner: Did the team win their division? Levels of Y (yes) and N (no), wild_card_winner: Was the team a wild card winner. Levels of Y (yes) and N (no), league_winner: Did the team win their league? Levels of Y (yes) and N (no),world_series_winner: Did the team win the World Series? Levels of Y (yes) and N (no), runs_scored: Number of runs scored during the season, at_bats: Number of at bats during the season, hits: Number of hits during the season. Includes singles, doubles, triples and homeruns, doubles: Number of doubles hit, triples: Number of triples hit, homeruns: Homeruns by batters, walks: Number of walks, strikeouts_by_batters: Number of batters struckout, stolen_bases: Number of stolen bases, caught_stealing: Number of base runners caught stealing, batters_hit_by_pitch: Number of batters hit by a pitch, sacrifice_flies: Number of sacrifice flies, opponents_runs_scored: Number of runs scored by opponents, earned_runs_allowed: Number of earned runs allowed, earned_run_average: Earned run average, complete_games: Number of games where a single pitcher played the entire game, shutouts: Number of shutouts, saves: Number of saves, outs_pitches: Number of outs pitched for the season (number of innings pitched times 3), hits_allowed: Number of hits made by opponents, homeruns_allowed: Number of homeruns hit by opponents, walks_allowed: Number of opponents who were walked, strikeouts_by_pitchers: Number of opponents who were struckout, errors: Number of errors, double_plays: Number of double plays, fielding_percentage: Teams fielding percentage, team_name: Full name of team, ball_park: Home ballpark name, home_attendance: Home attendance total*
+
+*To examine rule changes the dataset has been sliced to start at 1903. In 1961 (AL) and 1962 (NL) baseball set a standardized 162 games for the regular season but in 1903 the first World Series Championship began and introduced the "Modern Era" of baseball. Meaning that teams had a postseason (the world series tournament) that influenced the statistics. Not including years before 1903 will control for this. The variables of interests are year, league_id, runs_scored, homeruns, stolen_bases and strikeouts_by_pitchers. It's important to note that NA values were removed from the dataset and should be considered when interpreting results. The new dataset is named "Baseball".* 
+
+##Rule Change #1: The Abolition of Spitball
+
+*Before 1920, pitchers were allowed to cover the baseball with anything they wanted (like dirt or pine tar) to trick the batter or make it easier to grip the ball and throw better. This created the deadball era of baseball where it was a strategy-driven game of stolen bases, low scoring and a lot of small-ball tactics in order to win. In 1920, baseball were no longer allowed to have any foriegn substance on. Since the baseball were white, it was easy to enforce this rule and made it easier for batter's to see the ball. This change made it more favorable for batters and which changed the game. The small-ball tactics changed as batters started hitting the ball farther. Because of this, the number of stolen bases decreased and the number of runs increased after 1920 from before 1920.The reason stolen bases decreased was because the strategy of stealing bases changed when the small-ball tactics were used. With small-ball tactics, it was hard to advance runners on bases by hits since it would be easy to get them out with the ball staying in the infield. But since 1920, batters could focus more on hitting the ball farther which could advance runners easierly on hits without getting out.*
+
+*Below is a graph highlighting how stolen bases and number of runs changed throughout the years. Note that the year range is only for 1903 - 1940 to highlight the era most affect by this rule change. Past 1940 could have different reasons for changes in run scoring and stolen bases* 
+
+```{r}
+stolen_bases <- Baseball |> filter(year <= "1940") |>
+mutate(period = if_else(year < 1920, "pre-1920", "post-1920"))
+
+ggplot(data = stolen_bases, aes(x = year, y = stolen_bases, colour = period)) +
+  geom_point() +
+  geom_smooth(color = "black") +
+  labs(title = "Stolen Bases Through The Years 1903 - 1940",
+       x = "Year",
+       y = "Number of Stolen Bases",
+       colour = "Time Period") +
+  scale_color_brewer(palette = "Set2") +
+  theme_minimal()
+```
+
+*In this graph, number of stolen bases started to decrease in 1910s. This could be for a number of reasons. The trend lines shows that in 1920 the number of stolen bases per year still began to decreased and eventually hit it's lowest point. The points in green have overall less stolen bases than the points in orange showing the results of the rule change.* 
+
+```{r}
+runs_scored <- Baseball |> filter(year <= "1940") |>
+  mutate(period = if_else(year < 1920, "pre-1920", "post-1920"))
+
+ggplot(data = runs_scored, aes(x = year, y = runs_scored, colour = period)) +
+  geom_point() +
+  geom_smooth(color = "black") +
+  labs(title = "Runs Scored Through The Years 1903 - 1940",
+       x = "Year",
+       y = "Number of Runs Scored",
+       colour = "Time Period") +
+  scale_color_brewer(palette = "Set1") +
+  theme_minimal()
+```
+
+*In this graph, number of runs scored started to increase in 1910s. The trend line shows that after 1920 the slope of the line did increase and runs scored overall contuned to increases until leveling off. This shows the effects of the rule change.*
+
+
+2) Designated hitter introduced (1973) -> change it to 1961 - 2020 
+  - Higher runs per game
+  - More home runs
   - Increases run production and home runs
-  - Created a huge difference between the AL and NL(adopted the rule in 2022)
+  - Created a huge difference between the AL and NL(adopted the rule in 2022 -> outside range of this dataset)
  *Graphs:
-  - Differences in run production, home runs between the Leagues
+ 
+looking at
+AL vs NL
+```{r}
+designated_hitter <- Baseball |> filter(year >= "1961") |>
+  mutate(period = if_else(year < 1973, "pre-1973", "post-1973"))
+```
+
+```{r}
+ggplot(data = designated_hitter, aes(x = league_id, y = runs_scored, fill = period)) +
+  geom_boxplot() +
+  facet_wrap(~period) +
+  labs(title = "Number of Runs Scored Between Each League",
+       x = "League",
+       y = "Number of Runs",
+       fill = "Time Period") +
+  theme_minimal()
+```
+
+  *Homeruns
+```{r}
+ggplot(data = designated_hitter, aes(x = league_id, y = homeruns, fill = period)) +
+  geom_boxplot() +
+  facet_wrap(~period) +
+  labs(title = "Number of Homeruns Scored Between Each League",
+       x = "League",
+       y = "Number of Homeruns",
+       fill = "Time Period") +
+  theme_minimal()
+```
+
+
+
   
-- Big strikeout change-remained consistent from here (1969 the biggest change)
-  - Strike zone was adjusted to batter's armpits to top of knees to give a batter a chance to hit the ball with pitchers still able to be effective
-  - Future direction note in 2026 ABS introduced that will affect the number of strikeouts, walks, and stats overall
+3) Big strikeout change
+
+1963 strike zone expansion
+Larger vertical zone favored pitchers
+Led to an immediate increase in strikeouts by batters 1968-1969 year of the pitcher where pitchers dominated
+
+1969 strike zone reduction
+Reduced the zone’s height
+Temporarily slowed the growth of strikeouts, decreasing a little, though it did not reverse the trend
+
+Post-1969
+Strikeouts resumed a steady long-term increase due to:
+Pitch velocity increases
+Specialization of pitchers
+Changes in hitting approach
+
+Future direction
+The Automated Ball-Strike (ABS) system (introduced experimentally in 2026) may alter strikeout and walk rates by enforcing a consistent strike zone
+
  *Graphs:
-  - Strikeouts of batters, strikeouts by pitchers before and after
-   
-  
 
-Overall story: more games played influences the stats
-- 1961 and 1962 NL and AL expanded to 162 games per season -> remained that way since
-- can look at 1905-1960 and 1961-2020
+Strikeouts by pitchers to show year of the pitcher mound reduction and stuff 
+```{r}
+Pitcherstrikezone <- Baseball |> select(1,6) 
 
+pitcherstrikeouts <- Pitcherstrikezone |> drop_na() |> group_by(year) |> summarise(Total = sum(strikeouts_by_pitchers)) 
+```
 
-logistic regression model to predict world series winner:
+```{r}
+library(plotly)
 
+baseballplot <- ggplot(data = pitcherstrikeouts, aes(x = year, y = Total, text = paste("Season:", year,
+                                        "Strikeouts:", Total))) +
+  geom_point() +
+  theme_minimal() +
+  geom_vline(xintercept = 1963) +
+  geom_vline(xintercept = 1969) +
+  labs(title = "Strikeouts by Pitchers per Year",
+       x = "Year",
+       y = "Number of Strikeouts") +
+  lims(y = c(0, NA))
+baseballplot
 
-Connect the two stories and the logistic regression model somehow
+ggplotly(baseballplot, tooltip = "text")
+```
 
+1981 there was a strike (700 games canceled - to explain the outliers 2020 was covid)
 
-Interactive graph or shiny app for more exploration?
+1969 the mound decreased by 5 inches (15 to 10) in response to year of the pitcher
+
+*The following graph is a Shiny App in which the user can select the team of interest and a variable of interest. This app uses the full dataset with all the years and all numerical variables. The graph will only display the years the baseball team existed. The years will end at 2020 since that is the max year in the dataset. Here you can view how teams improved or declined in skill over the years.*
+
+```{r}
+library(shiny)
+library(tidyverse)
+library(lubridate)
+library(glue)
+
+mlb_teams2 <- mlb_teams |> 
+  select(1, 4:8, 13:39, 41) #Numerical variables only
+
+team_choices <- mlb_teams2 |>
+  distinct(team_name) |>
+  arrange(team_name) |>
+  pull(team_name)
+
+numeric_vars <- mlb_teams2 |>
+  select(where(is.numeric)) |>
+  select(-year) |>
+  names()
+
+ui <- fluidPage(
+  titlePanel("MLB Teams Statistics Throughout History"),
+
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        inputId = "team_name",
+        label = "Choose a Team:",
+        choices = team_choices,
+        selected = "Anaheim Angels"
+      ),
+
+      selectInput(
+        inputId = "yvar",
+        label = "Choose a Variable:",
+        choices = numeric_vars,
+        selected = numeric_vars[1]
+      )
+    ),
+
+    mainPanel(
+      plotOutput("baseball_plot")
+    )
+  )
+)
+
+server <- function(input, output) {
+
+  output$baseball_plot <- renderPlot({
+
+    df_team <- mlb_teams2 |>
+      filter(team_name == input$team_name)
+
+    ggplot(df_team, aes(x = year, y = .data[[input$yvar]])) +
+      geom_line(linewidth = 1) +
+      theme_minimal(base_size = 14) +
+      labs(
+        title = glue("{input$team_name} Statistics: {input$yvar}"),
+        x = "Year",
+        y = str_replace_all(input$yvar, "_", " ") |> str_to_title()
+      )
+
+  })
+}
+
+shinyApp(ui, server)
+```
