@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "How Rule Changes in Baseball Affected The Game in History"
 format: gfm
 ---
 
@@ -99,23 +99,6 @@ ggplot(data = designated_hitter, aes(x = league_id, y = homeruns, fill = period)
 
 Strike zone change in 1963 to favor pitchers by that led to "Year of the Pitcher" 1968-1969 so it change again in 1969 with the mound reducing form 15 inches to 10 inches to help batters more
 
-```{r}
-library(plotly)
+## More Analysis
 
-baseballplot <- ggplot(data = pitcherstrikeouts, aes(x = year, y = Total, text = paste("Season:", year,
-                                        "Strikeouts:", Total))) +
-  geom_point() +
-  theme_minimal() +
-  geom_vline(xintercept = 1963) +
-  geom_vline(xintercept = 1969) +
-  labs(title = "Strikeouts by Pitchers per Year",
-       x = "Year",
-       y = "Number of Strikeouts") +
-  lims(y = c(0, NA))
-baseballplot
-
-ggplotly(baseballplot, tooltip = "text")
-```
-
-
-
+A Shiny App is also available to look at all any team of interest (with their years of existence) with any numerical variable from the original dataset. 
