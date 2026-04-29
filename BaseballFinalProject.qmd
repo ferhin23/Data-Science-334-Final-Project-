@@ -27,9 +27,9 @@ Baseball <- mlb_teams |> select(1:2, 13, 18, 21, 35) |> slice(261:2784)
 
 ##Rule Change #1: The Abolition of Spitball
 
-*Before 1920, pitchers were allowed to cover the baseball with anything they wanted (like dirt or pine tar) to trick the batter or make it easier to grip the ball and throw better. This created the deadball era of baseball where it was a strategy-driven game of stolen bases, low scoring and a lot of small-ball tactics in order to win. In 1920, baseball were no longer allowed to have any foriegn substance on. Since the baseball were white, it was easy to enforce this rule and made it easier for batter's to see the ball. This change made it more favorable for batters and which changed the game. The small-ball tactics changed as batters started hitting the ball farther. Because of this, the number of stolen bases decreased and the number of runs increased after 1920 from before 1920.The reason stolen bases decreased was because the strategy of stealing bases changed when the small-ball tactics were used. With small-ball tactics, it was hard to advance runners on bases by hits since it would be easy to get them out with the ball staying in the infield. But since 1920, batters could focus more on hitting the ball farther which could advance runners easierly on hits without getting out.*
+*Before 1920, pitchers were allowed to cover the baseball with anything they wanted (like dirt or pine tar) to trick the batter or make it easier to grip the ball and throw better. This created the deadball era of baseball where it was a strategy-driven game of stolen bases, low scoring and a lot of small-ball tactics in order to win. In 1920, baseball were no longer allowed to have any foriegn substance on. Since the baseball were white, it was easy to enforce this rule and made it easier for batter's to see the ball. This change made it more favorable for batters and which changed the game. The small-ball tactics changed as batters started hitting the ball farther. Because of this, the number of stolen bases decreased and the number of runs increased after 1920 from before 1920.The reason stolen bases decreased was because the strategy of stealing bases changed when the small-ball tactics were used. With small-ball tactics, it was hard to advance runners on bases by hits since it would be easy to get them out with the ball staying in the infield. But since 1920, batters could focus more on hitting the ball farther which could advance runners easier on hits without getting out.*
 
-*Below is a graph highlighting how stolen bases and number of runs changed throughout the years. Note that the year range is only for 1903 - 1940 to highlight the era most affect by this rule change. Past 1940 could have different reasons for changes in run scoring and stolen bases* 
+*Below are graph highlighting how stolen bases and number of runs changed throughout the years. Note that the year range is only for 1903 - 1940 to highlight the era most affect by this rule change. Past 1940 could have different reasons for changes in run scoring and stolen bases* 
 
 ```{r}
 stolen_bases <- Baseball |> filter(year <= "1940") |>
@@ -63,18 +63,14 @@ ggplot(data = runs_scored, aes(x = year, y = runs_scored, colour = period)) +
   theme_minimal()
 ```
 
-*In this graph, number of runs scored started to increase in 1910s. The trend line shows that after 1920 the slope of the line did increase and runs scored overall contuned to increases until leveling off. This shows the effects of the rule change.*
+*In this graph, number of runs scored started to increase in 1910s. The trend line shows that after 1920 the slope of the line did increase and runs scored overall continued to increases until leveling off. This shows the effects of the rule change.*
 
+##Rule Change #2: The Introduction of a Designated Hitter
 
-2) Designated hitter introduced (1973) -> change it to 1961 - 2020 
-  - Higher runs per game
-  - More home runs
-  - Increases run production and home runs
-  - Created a huge difference between the AL and NL(adopted the rule in 2022 -> outside range of this dataset)
- *Graphs:
- 
-looking at
-AL vs NL
+*One pivotal change that occurred in 1973 was when the American League introduced a designated hitter. Pitchers were generally not very good hitters so to help the offense and make the more games interesting for fans, a designated hitter (DH) bats in place of the pitcher. The National League did not make this change therefore created a huge difference between the leagues. Even though both leagues will still have the same amount of hitters/players the AL had more runs and more home runs than the NL because a better hitter in the AL can hit instead of the pitcher fir the NL. *
+
+*Below are boxplots that show the difference between the AL and NL pre 1973 and post 1973 for number of runs scored and home runs. The range of years used for this graph was 1903 to 2020. The NL introduced a DH in 2022 so using all the years is beneficial in showing the differences.*
+
 ```{r}
 designated_hitter <- Baseball |> filter(year >= "1961") |>
   mutate(period = if_else(year < 1973, "pre-1973", "post-1973"))
@@ -90,23 +86,23 @@ ggplot(data = designated_hitter, aes(x = league_id, y = runs_scored, fill = peri
        fill = "Time Period") +
   theme_minimal()
 ```
+*Notice how the AL and NL had similar distributions pre 1973 and after 1973, the AL had a significantly higher number of runs than NL. Between post 1973 and pre 1973 there are more number of runs in post 1973 and this could be because players got better over time.*
 
-  *Homeruns
 ```{r}
 ggplot(data = designated_hitter, aes(x = league_id, y = homeruns, fill = period)) +
   geom_boxplot() +
   facet_wrap(~period) +
-  labs(title = "Number of Homeruns Scored Between Each League",
+  labs(title = "Number of Home runs Scored Between Each League",
        x = "League",
        y = "Number of Homeruns",
        fill = "Time Period") +
   theme_minimal()
 ```
+*The difference between leagues are not as pronounced for number of home runs than number of runs scored. But the difference post 1973 is still significantly higher for AL than NL.*
 
+##Rule Change #3: The Strike Zone Change
 
-
-  
-3) Big strikeout change
+*Probably the most subjective part of baseball is the strike zone *
 
 1963 strike zone expansion
 Larger vertical zone favored pitchers
@@ -129,7 +125,7 @@ The Automated Ball-Strike (ABS) system (introduced experimentally in 2026) may a
 
 Strikeouts by pitchers to show year of the pitcher mound reduction and stuff 
 ```{r}
-Pitcherstrikezone <- Baseball |> select(1,6) 
+Pitcherstrikezone <- Baseball |> select(1,7) 
 
 pitcherstrikeouts <- Pitcherstrikezone |> drop_na() |> group_by(year) |> summarise(Total = sum(strikeouts_by_pitchers)) 
 ```

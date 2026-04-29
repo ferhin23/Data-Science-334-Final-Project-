@@ -18,8 +18,9 @@ mutate(period = if_else(year < 1920, "pre-1920", "post-1920"))
 designated_hitter <- Baseball |> filter(year >= "1961") |>
   mutate(period = if_else(year < 1973, "pre-1973", "post-1973"))
 
-strikezone <- Baseball |> select(1,5) 
-batterstrikeouts <- strikezone |> drop_na() |> group_by(year) |> summarise(Total = sum(strikeouts_by_batters)) 
+Pitcherstrikezone <- Baseball |> select(1,7) 
+
+pitcherstrikeouts <- Pitcherstrikezone |> drop_na() |> group_by(year) |> summarise(Total = sum(strikeouts_by_pitchers)) 
 ```
 
 ## Data Introduction
@@ -29,7 +30,7 @@ batterstrikeouts <- strikezone |> drop_na() |> group_by(year) |> summarise(Total
 ## Data Set
  - The mlb_teams dataset used it from openintro linked here: https://www.openintro.org/data/index.php?data=mlb_teams)  - looks at every professional team that exists or has existed from 1876 to 2020 with various numerical and categorical variables on each team's performance. 
 
- - I sliced the dataset to only include world series years (1903-2020) and selected variables of interest: year, league_id, runs_scored, homeruns, strikeouts_by_batters, stolen_bases and strikeouts_by_pitchers. 
+ - I sliced the dataset to only include world series years (1903-2020) and selected variables of interest: year, league_id, runs_scored, homeruns, stolen_bases and strikeouts_by_pitchers. 
 
 ## Question of Interest
  - How did some of the biggest rule changes in the history of baseball affect the game:
@@ -105,17 +106,16 @@ Strike zone change in 1963 to favor pitchers by that led to "Year of the Pitcher
 ```{r}
 library(plotly)
 
-baseballplot <- ggplot(data = batterstrikeouts, aes(x = year, y = Total, text = paste("Season:", year,
+baseballplot <- ggplot(data = pitcherstrikeouts, aes(x = year, y = Total, text = paste("Season:", year,
                                         "Strikeouts:", Total))) +
   geom_point() +
   theme_minimal() +
   geom_vline(xintercept = 1963) +
   geom_vline(xintercept = 1969) +
-  labs(title = "Strikeouts by Batters per Year",
+  labs(title = "Strikeouts by Pitchers per Year",
        x = "Year",
        y = "Number of Strikeouts") +
-  lims(y = c(0, NA)) +
-  theme_minimal(base_size = 24)
+  lims(y = c(0, NA))
 baseballplot
 
 ggplotly(baseballplot, tooltip = "text")
