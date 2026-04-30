@@ -1,6 +1,10 @@
 ---
-title: "Baseball Title Here"
+title: "How Rule Changes in Baseball Affected The Game in History"
 author: "Faith Rhinehart"
+date: "2026-05-4"
+execute: 
+  echo: true
+  warning: false
 format: 
   html:
     embed-resources: true
@@ -15,21 +19,26 @@ mlb_teams <- read_csv("data-finalProject/mlb_teams.csv")
 Baseball <- mlb_teams |> select(1:2, 13, 18, 21, 35) |> slice(261:2784)
 ```
 
+**Abstract**
+
+*Baseball has undergone numerous rule changes since its formalization in the mid‑19th century, many of which have fundamentally altered how the game is played and how player performance is measured. This project examines several major rule changes in Major League Baseball history and analyzes their impact on key offensive and pitching statistics. Using the mlb_teams dataset from OpenIntro which includes team‑level statistics from 1876 to 2020, this analysis focuses on three major rule changes: the abolition of the spitball, the introduction of the designated hitter, and changes to the strike zone. Through visualizations and comparative analysis, this project highlights how these rule changes influenced statistical trends such as runs scored, stolen bases, home runs, and strikeouts. Overall, the results show that rule changes have played a significant role in reshaping baseball strategy and performance across eras.*
+
 **Introduction**
 
-*Created in 1840s New York, modern Baseball took on the first set of formal rules that began to shape and define the sport. These rules included the diamond shaped in-field, 3 outs per innings, and the foul lines. By 1876, baseball grew in popularity and professional teams were introduced, eventually leading to the creation of the National League in 1876 and the American League in 1901 establishing the game as the oldest professional sport in the United States.*
+*Created in 1840s New York, modern baseball took on its first set of formal rules that began to shape and define the sport. These rules included the diamond‑shaped infield, three outs per inning, and foul lines. By 1876, baseball had grown in popularity and professional teams were introduced, eventually leading to the creation of the National League (NL) in 1876 and the American League (AL) in 1901, establishing baseball as the oldest professional sport in the United States.*
 
-*Since the sport has been played now for 150 years you can imagine there has been a lot of rule changes. Whether it was to improve the game or define the game more, these rules changes made a lasting impact on how players played baseball. The goal of this project is to examine how some of the biggest rule changes that occurred in the history impacted the overall statistics.*
+*Since the sport has now been played for over 150 years, there have been many rule changes. Whether introduced to improve the game or better define it, these rule changes made a lasting impact on how baseball is played. The goal of this project is to examine how some of the most significant rule changes in baseball history impacted overall team statistics.The mlb_teams dataset from OpenIntro (Linked Here: https://www.openintro.org/data/index.php?data=mlb_teams) contains information on every professional team that exists or has existed from 1876 to 2020. The dataset includes 41 variables with 2,784 observations. Key variables include year of play, league, division, win‑loss records, postseason results, offensive statistics (such as runs scored, hits, home runs, walks, strikeouts, and stolen bases), pitching statistics (such as earned runs, ERA, strikeouts, and shutouts), and fielding metrics. Additional metadata includes team name, ballpark, and home attendance.* 
 
-*The mlb_teams dataset from openintro linked here: https://www.openintro.org/data/index.php?data=mlb_teams looks at every professional team that exists or has existed from 1876 to 2020. The 41 variables-with 2784 observations-include year: Year of play, league_id: League the team plays in with levels AL (American League) and NL (National League), division_id: Division the team plays in with levels W (west), E (east) and C (central), rank: Team's rank in their division at the end of the regular season, games_played: Games played, home_games: Games played at home, wins: Number of games won, losses: Number of games lost, division_winner: Did the team win their division? Levels of Y (yes) and N (no), wild_card_winner: Was the team a wild card winner. Levels of Y (yes) and N (no), league_winner: Did the team win their league? Levels of Y (yes) and N (no),world_series_winner: Did the team win the World Series? Levels of Y (yes) and N (no), runs_scored: Number of runs scored during the season, at_bats: Number of at bats during the season, hits: Number of hits during the season. Includes singles, doubles, triples and homeruns, doubles: Number of doubles hit, triples: Number of triples hit, homeruns: Homeruns by batters, walks: Number of walks, strikeouts_by_batters: Number of batters struckout, stolen_bases: Number of stolen bases, caught_stealing: Number of base runners caught stealing, batters_hit_by_pitch: Number of batters hit by a pitch, sacrifice_flies: Number of sacrifice flies, opponents_runs_scored: Number of runs scored by opponents, earned_runs_allowed: Number of earned runs allowed, earned_run_average: Earned run average, complete_games: Number of games where a single pitcher played the entire game, shutouts: Number of shutouts, saves: Number of saves, outs_pitches: Number of outs pitched for the season (number of innings pitched times 3), hits_allowed: Number of hits made by opponents, homeruns_allowed: Number of homeruns hit by opponents, walks_allowed: Number of opponents who were walked, strikeouts_by_pitchers: Number of opponents who were struckout, errors: Number of errors, double_plays: Number of double plays, fielding_percentage: Teams fielding percentage, team_name: Full name of team, ball_park: Home ballpark name, home_attendance: Home attendance total*
+*To examine the effects of rule changes, the dataset was sliced to begin at 1903. In that year, the first World Series was played, marking the beginning of baseball’s “Modern Era” and introducing postseason play, which influenced team statistics. Excluding years before 1903 helps control for this structural change. The variables of interest in this analysis are year, league_id, runs_scored, homeruns, stolen_bases, and strikeouts_by_pitchers. In 1961 (AL) and 1962 (NL), baseball set a standardized 162 games for the regular season which means years before that had varying game numbers. Also, NA values were removed from the dataset. Both of these should be considered when interpreting the results. The cleaned dataset is referred to as "Baseball".*
 
-*To examine rule changes the dataset has been sliced to start at 1903. In 1961 (AL) and 1962 (NL) baseball set a standardized 162 games for the regular season but in 1903 the first World Series Championship began and introduced the "Modern Era" of baseball. Meaning that teams had a postseason (the world series tournament) that influenced the statistics. Not including years before 1903 will control for this. The variables of interests are year, league_id, runs_scored, homeruns, stolen_bases and strikeouts_by_pitchers. It's important to note that NA values were removed from the dataset and should be considered when interpreting results. The new dataset is named "Baseball".* 
 
-##Rule Change #1: The Abolition of Spitball
+**Rule Change #1: The Abolition of Spitball**
 
-*Before 1920, pitchers were allowed to cover the baseball with anything they wanted (like dirt or pine tar) to trick the batter or make it easier to grip the ball and throw better. This created the deadball era of baseball where it was a strategy-driven game of stolen bases, low scoring and a lot of small-ball tactics in order to win. In 1920, baseball were no longer allowed to have any foriegn substance on. Since the baseball were white, it was easy to enforce this rule and made it easier for batter's to see the ball. This change made it more favorable for batters and which changed the game. The small-ball tactics changed as batters started hitting the ball farther. Because of this, the number of stolen bases decreased and the number of runs increased after 1920 from before 1920.The reason stolen bases decreased was because the strategy of stealing bases changed when the small-ball tactics were used. With small-ball tactics, it was hard to advance runners on bases by hits since it would be easy to get them out with the ball staying in the infield. But since 1920, batters could focus more on hitting the ball farther which could advance runners easier on hits without getting out.*
+*Before 1920, pitchers were allowed to apply foreign substances such as dirt or pine tar to the baseball in order to deceive batters or improve grip. This contributed to what is known as the “dead‑ball era,” which was characterized by low scoring, frequent stolen bases, and small‑ball strategies used to manufacture runs. In 1920, MLB banned the use of foreign substances on the baseball. Because baseballs were white, this rule was relatively easy to enforce and also made the ball easier for batters to see.*
 
-*Below are graph highlighting how stolen bases and number of runs changed throughout the years. Note that the year range is only for 1903 - 1940 to highlight the era most affect by this rule change. Past 1940 could have different reasons for changes in run scoring and stolen bases* 
+*This change shifted the game in favor of hitters and significantly altered offensive strategy. As batters began hitting the ball farther, teams relied less on stolen bases and small‑ball tactics. As a result, stolen bases declined while runs scored increased after 1920. Prior to the rule change, advancing runners through hitting was difficult because most balls stayed in the infield, making outs more likely. After 1920, harder and longer hits allowed runners to advance more easily without the need to steal bases.*
+
+*The following graphs highlight how stolen bases and runs scored changed over time. The year range is restricted to 1903–1940 to emphasize the era most affected by this rule change. Changes occurring after 1940 could be influenced by additional factors beyond the abolition of the spitball.*
 
 ```{r}
 stolen_bases <- Baseball |> filter(year <= "1940") |>
@@ -46,7 +55,7 @@ ggplot(data = stolen_bases, aes(x = year, y = stolen_bases, colour = period)) +
   theme_minimal()
 ```
 
-*In this graph, number of stolen bases started to decrease in 1910s. This could be for a number of reasons. The trend lines shows that in 1920 the number of stolen bases per year still began to decreased and eventually hit it's lowest point. The points in green have overall less stolen bases than the points in orange showing the results of the rule change.* 
+*In the graph, the number of stolen bases begins to decline during the 1910s. While this decrease started prior to 1920, the trend line shows that stolen bases continued to decline after the rule change and eventually reached their lowest point. The post‑1920 observations consistently show fewer stolen bases than the pre‑1920 observations, supporting the conclusion that the rule change impacted base‑stealing strategy.*
 
 ```{r}
 runs_scored <- Baseball |> filter(year <= "1940") |>
@@ -63,20 +72,20 @@ ggplot(data = runs_scored, aes(x = year, y = runs_scored, colour = period)) +
   theme_minimal()
 ```
 
-*In this graph, number of runs scored started to increase in 1910s. The trend line shows that after 1920 the slope of the line did increase and runs scored overall continued to increases until leveling off. This shows the effects of the rule change.*
+*In the graph, runs begin to increase during the 1910s. After 1920, the slope of the trend line becomes steeper, and overall run scoring increases until eventually leveling off. This pattern highlights the offensive boost that resulted from banning the spitball.*
 
-##Rule Change #2: The Introduction of a Designated Hitter
+**Rule Change #2: The Introduction of a Designated Hitter**
 
-*One pivotal change that occurred in 1973 was when the American League introduced a designated hitter. Pitchers were generally not very good hitters so to help the offense and make the more games interesting for fans, a designated hitter (DH) bats in place of the pitcher. The National League did not make this change therefore created a huge difference between the leagues. Even though both leagues will still have the same amount of hitters/players the AL had more runs and more home runs than the NL because a better hitter in the AL can hit instead of the pitcher fir the NL. *
+*One pivotal change occurred in 1973, when the American League introduced the designated hitter (DH). Pitchers were generally poor hitters, so to increase offense and make games more exciting for fans, the DH was introduced to bat in place of the pitcher. The National League did not adopt this rule at the time, creating a major difference between the two leagues.*
 
-*Below are boxplots that show the difference between the AL and NL pre 1973 and post 1973 for number of runs scored and home runs. The range of years used for this graph was 1903 to 2020. The NL introduced a DH in 2022 so using all the years is beneficial in showing the differences.*
+*Although both leagues continued to field the same number of players, the American League benefited offensively from allowing a stronger hitter to replace the pitcher in the lineup. As a result, the AL recorded higher numbers of runs and home runs compared to the NL.*
+
+*The following boxplots compare the American League and National League before and after 1973 for runs scored and home runs. The analysis uses data from 1903 to 2020. While the National League adopted the DH in 2022, including all prior years helps highlight the long‑term effects of the rule difference. The years 1981, 1994, and 2020 were removed due to shortened seasons caused by strikes and the COVID‑19 pandemic, which could have distorted the results.*
 
 ```{r}
-designated_hitter <- Baseball |> filter(year >= "1961") |>
+designated_hitter <- Baseball |> filter(!year %in% c(1981, 1994, 2020)) |>
   mutate(period = if_else(year < 1973, "pre-1973", "post-1973"))
-```
 
-```{r}
 ggplot(data = designated_hitter, aes(x = league_id, y = runs_scored, fill = period)) +
   geom_boxplot() +
   facet_wrap(~period) +
@@ -86,51 +95,31 @@ ggplot(data = designated_hitter, aes(x = league_id, y = runs_scored, fill = peri
        fill = "Time Period") +
   theme_minimal()
 ```
-*Notice how the AL and NL had similar distributions pre 1973 and after 1973, the AL had a significantly higher number of runs than NL. Between post 1973 and pre 1973 there are more number of runs in post 1973 and this could be because players got better over time.*
+*Before 1973, the AL and NL show similar distributions of runs scored. After 1973, the American League has a noticeably higher distribution of runs than the National League. Additionally, overall run totals are higher in the post‑1973 period, which may also reflect improvements in player ability over time.*
 
 ```{r}
 ggplot(data = designated_hitter, aes(x = league_id, y = homeruns, fill = period)) +
   geom_boxplot() +
   facet_wrap(~period) +
-  labs(title = "Number of Home runs Scored Between Each League",
+  labs(title = "Number of Home Runs Between Each League",
        x = "League",
        y = "Number of Homeruns",
        fill = "Time Period") +
   theme_minimal()
 ```
-*The difference between leagues are not as pronounced for number of home runs than number of runs scored. But the difference post 1973 is still significantly higher for AL than NL.*
+*The difference between leagues is less pronounced for home runs than for runs scored, but post‑1973 the American League still shows higher home‑run totals than the National League.*
 
-##Rule Change #3: The Strike Zone Change
+**Rule Change #3: The Strike Zone Change**
 
-*Probably the most subjective part of baseball is the strike zone *
+*The strike zone is one of the most subjective aspects of baseball. While it is officially defined based on a batter’s height, in practice it is interpreted by umpires and has been redefined multiple times to adjust for changes in the game. In 1963, one of the most significant strike zone changes occurred when the zone was expanded vertically from the batter’s knees to their shoulders, instead of the armpits. This change favored pitchers and led to a increase in strikeouts.*
 
-1963 strike zone expansion
-Larger vertical zone favored pitchers
-Led to an immediate increase in strikeouts by batters 1968-1969 year of the pitcher where pitchers dominated
+*By 1968–1969, pitcher dominance had increased so dramatically that the period was nicknamed “The Year of the Pitcher.” In response, MLB implemented another rule change in 1969 that reduced the strike zone back to the armpits and lowered the pitching mound from 15 inches to 10 inches. These changes temporarily slowed the growth of strikeouts, although they did not reverse the long‑term upward trend.* 
 
-1969 strike zone reduction
-Reduced the zone’s height
-Temporarily slowed the growth of strikeouts, decreasing a little, though it did not reverse the trend
-
-Post-1969
-Strikeouts resumed a steady long-term increase due to:
-Pitch velocity increases
-Specialization of pitchers
-Changes in hitting approach
-
-Future direction
-The Automated Ball-Strike (ABS) system (introduced experimentally in 2026) may alter strikeout and walk rates by enforcing a consistent strike zone
-
- *Graphs:
-
-Strikeouts by pitchers to show year of the pitcher mound reduction and stuff 
 ```{r}
-Pitcherstrikezone <- Baseball |> select(1,7) 
+Pitcherstrikezone <- Baseball |> select(1,6) 
 
 pitcherstrikeouts <- Pitcherstrikezone |> drop_na() |> group_by(year) |> summarise(Total = sum(strikeouts_by_pitchers)) 
-```
 
-```{r}
 library(plotly)
 
 baseballplot <- ggplot(data = pitcherstrikeouts, aes(x = year, y = Total, text = paste("Season:", year,
@@ -148,11 +137,13 @@ baseballplot
 ggplotly(baseballplot, tooltip = "text")
 ```
 
-1981 there was a strike (700 games canceled - to explain the outliers 2020 was covid)
+*The interactive Plotly graph shows total pitcher strikeouts by year. The vertical lines indicate the major strike zone changes in 1963 and 1969. A sharp increase in strikeouts is visible during the late 1960s, highlighting the "Year of The Pitcher". Outliers appear in 1981, 1994, and 2020 due to strikes and the COVID‑19 pandemic, which reduced the number of games played.*
 
-1969 the mound decreased by 5 inches (15 to 10) in response to year of the pitcher
+*Since 1969, additional strike zone adjustments occurred in 1988 and 1996, yet strikeouts continued to rise. This long‑term increase may be due to higher pitch velocity, pitcher specialization, and strategic bullpen usage. In 2026, MLB introduced the Automated Ball‑Strike (ABS) system, formally defining the strike zone as 27% to 53.5% of a player’s listed height, representing a major structural shift toward a standardized, percentage‑based strike zone.*
 
-*The following graph is a Shiny App in which the user can select the team of interest and a variable of interest. This app uses the full dataset with all the years and all numerical variables. The graph will only display the years the baseball team existed. The years will end at 2020 since that is the max year in the dataset. Here you can view how teams improved or declined in skill over the years.*
+**More Analysis**
+
+*The following graph is a Shiny App in which the user can select the team of interest and a variable of interest. This app uses the full dataset with all the years and all numerical variables. The graph will only display the years the baseball team existed. The years will end at 2020 since that is the max year in the dataset. Here you can view how teams improved or declined in skill over the years. Use can also use the app to see how the rule changes affected individual teams separately over the years.*
 
 ```{r}
 library(shiny)
@@ -220,3 +211,9 @@ server <- function(input, output) {
 
 shinyApp(ui, server)
 ```
+
+**Conclusion**
+
+*One limitation of this analysis is that many factors beyond rule changes may have influenced the observed trends. Baseball has continually evolved, and confounding variables such as new technology, player demographics, more rule changes, and historical events likely affected the data.*
+
+*For future analysis, I would explore how the implementation of ABS affects win‑loss outcomes and consistency in performance. Additionally, it would be interesting to examine how historical events such as World War I and World War II impacted baseball performance and league statistics.*
